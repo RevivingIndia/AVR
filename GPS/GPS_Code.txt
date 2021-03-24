@@ -1,0 +1,39 @@
+What is the logic to calculate the latitude , longitude
+
+The following algorithm is used to extract the latitude and longitude information from the GPS module using 
+$GPGGA string and display it on a LCD:
+1.      Get data in UDR and check weather that data is equal to $. If the data matches go to step(2) else get a new data.
+2.      Get data byte by byte and check if the received byte is equal to GPGGA
+3.      If the step (2) matches completely then  go to step (4) else go back to step(1)
+4.      Leave first comma and wait till second comma (since we not looking for time).
+5.      Start taking data in an array lati_value[ ] till the next comma.
+6.      Get latitude direction in lati_dir
+7.      Do the same for longitude
+8.      Display the values on LCD and go back to step (1).
+
+
+if(USART1_ReadChar()=='$')
+{
+  
+	  
+		if(USART1_ReadChar()=='G')
+		{
+			if(USART1_ReadChar()=='P')
+			{
+				if(USART1_ReadChar()=='G')
+				{
+					if(USART1_ReadChar()=='G')
+					{
+						if(USART1_ReadChar()=='A')
+						{
+						
+							for( l=1;l<=12;l++)
+								t=USART1_ReadChar();
+							for( a=0;a<=8;a++,l++)
+								lattitude[a]=USART1_ReadChar();
+							lattitude[a]='\0';
+							for(a=0;a<3;a++)
+								t=USART1_ReadChar();
+							for(a=0;a<=9;a++,l++)
+								longitude[a]=USART1_ReadChar();
+							longitude[a]='\0';
